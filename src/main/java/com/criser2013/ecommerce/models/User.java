@@ -7,34 +7,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-@Entity 
+@Entity
 @Table(uniqueConstraints = {
-    @UniqueConstraint (name = "unique_users_dni_email", columnNames = {"email", "dni"})
+        @UniqueConstraint(name = "unique_users_dni_email", columnNames = { "email", "dni" })
 })
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    public Long id;
 
-    @Column(name = "role_id")
-    public Long roleId;
+    @OneToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    public Role roleId;
 
-    @Column(name = "question_id")
-    public Long questionId;
+    @OneToOne
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
+    public SecurityQuestion questionId;
 
     @Column(name = "first_name", length = 100)
     public String firstName;
 
-    @Column(name="last_name", length = 100)
+    @Column(name = "last_name", length = 100)
     public String lastName;
 
-    @Column (unique = true, length = 100)
+    @Column(unique = true, length = 100)
     public String email;
 
-    @Column(name="registration_date")
+    @Column(name = "registration_date")
     public LocalDateTime registrationDate;
 
     public String phone;
@@ -42,8 +46,12 @@ public class User {
     @Column(length = 15)
     public String dni;
 
-    public Byte password;
+    private Byte password;
 
-    @Column(name="security_answer", length = 200)
+    @Column(name = "security_answer", length = 200)
     public String securityAnswer;
+
+    public Byte getPassword() {
+        return this.password;
+    };
 }
