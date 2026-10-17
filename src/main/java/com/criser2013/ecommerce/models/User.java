@@ -46,12 +46,8 @@ public class User {
     @Column(length = 15)
     public String dni;
 
-    private Byte password;
+    public String password;
 
     @Column(name = "security_answer", length = 200)
     public String securityAnswer;
-
-    public Byte getPassword() {
-        return this.password;
-    };
 }

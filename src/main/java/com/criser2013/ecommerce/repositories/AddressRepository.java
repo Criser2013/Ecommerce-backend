@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.criser2013.ecommerce.models.Address;
 
 public interface AddressRepository extends CrudRepository<Address, Long> {
-    public List<Address> findByUserid(Long userId);
+    public List<Address> findByUserId(Long userId);
 
-    public Address findFirstByUseridAndIsdefault(Long userId, Boolean isDefault);
+    public Address findFirstByUserIdAndIsDefault(Long userId, Boolean isDefault);
 }

@@ -18,7 +18,7 @@ public class Zipcode {
     public String country;
 
     @Column(length = 50)
-    public String districString;
+    public String district;
 
     @Column(length = 100)
     public String state;
