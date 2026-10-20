@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 @Table(name = "zipcode")
 public class Zipcode {
     @Id
+    @Column (length = 10)
     public String zipcode;
 
     @Column(length = 100)
