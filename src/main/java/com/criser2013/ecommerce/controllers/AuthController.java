@@ -9,9 +9,10 @@ import com.criser2013.ecommerce.services.AuthService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 public class AuthController {
@@ -20,16 +21,18 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-    
+
     @PostMapping("/api/auth/signup")
-    public SignupResponse signUp(@Valid  @RequestBody NewUserRequest newUser) {
-        try {
-            User user = this.authService.signUp(newUser);
-            return new SignupResponse(user.id, user.roleId.id, user.status);
-        } catch (Error e) {
-            return new SignupResponse(e.toString());
-        }
+    public ResponseEntity<SignupResponse> signUp(
+        @Valid @RequestBody NewUserRequest newUser
+    ) {
+        User user = authService.signUp(newUser);
+        SignupResponse response = new SignupResponse(
+                user.id,
+                user.roleId.id,
+                user.status);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-    
 
 }
