@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import com.criser2013.ecommerce.models.Zipcode;
 
 public interface ZipcodeRepository extends CrudRepository<Zipcode, String>{
-    public Zipcode findFirstByZipcode(String zipcode);
+    public Zipcode findByZipcode(String zipcode);
 }

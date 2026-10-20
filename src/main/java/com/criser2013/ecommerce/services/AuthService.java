@@ -1,15 +1,11 @@
 package com.criser2013.ecommerce.services;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.criser2013.ecommerce.dtos.common.ZipcodeDto;
 import com.criser2013.ecommerce.dtos.requests.NewUserRequest;
+import com.criser2013.ecommerce.models.User;
 import com.criser2013.ecommerce.models.Address;
 import com.criser2013.ecommerce.models.Role;
 import com.criser2013.ecommerce.models.SecurityQuestion;
@@ -28,7 +24,9 @@ public class AuthService {
     private final ZipcodeRepository zipcodeRepository;
     private final RoleRepository roleRepository;
 
-    public AuthService(UserRepository userRepository, AddressRepository addressRepository, ZipcodeRepository zipcodeRepository, SecurityQuestionRepository questionRepository, SecurityQuestionRepository securityQuestionRepository, RoleRepository roleRepository) {
+    public AuthService(UserRepository userRepository, AddressRepository addressRepository,
+            ZipcodeRepository zipcodeRepository, SecurityQuestionRepository questionRepository,
+            SecurityQuestionRepository securityQuestionRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.zipcodeRepository = zipcodeRepository;
@@ -36,34 +34,52 @@ public class AuthService {
         this.securityQuestionRepository = securityQuestionRepository;
     }
 
-    public Boolean signUp(NewUserRequest newUser) throws PatternSyntaxException {
-
+    /**
+     * Method to register new users.
+     * @param newUser {NewUserRequest} New user instance.
+     * @return {User} Registered user instance.
+     */
+    public User signUp(NewUserRequest newUser) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
         String encodedPassword = encoder.encode(newUser.password);
-        String encodedSecurirtyAnswer = encoder.encode(newUser.securityAnswer);
+        String encodedSecurityAnswer = encoder.encode(newUser.securityAnswer);
 
-        Role userRole = roleRepository.findByRoleId(Long.valueOf(2));
-        SecurityQuestion userQuestion = securityQuestionRepository.findBySecurityId(newUser.questionId);
+        Role roleInstance = roleRepository.findByRoleId(Long.valueOf(2));
+        SecurityQuestion questionInstance = securityQuestionRepository.findBySecurityId(newUser.questionId);
+        Zipcode zipcodeInstance = null;
 
-        boolean existsZipcode = zipcodeRepository.existsById(newUser.address.zipcode.zipcode());
-        Zipcode userZipcode = null;
+        ZipcodeDto userZipcode = newUser.address.zipcode;
+        boolean existsZipcode = zipcodeRepository.existsById(userZipcode.zipcode);
 
-        if (!existsZipcode) {
-            Zipcode userZipcode = existsZipcode ? zipcodeRepository.findById(newUser.address.zipcode.zipcode());
+        if (existsZipcode) {
+            zipcodeInstance = zipcodeRepository.findByZipcode(userZipcode.zipcode);
+        } else {
+            zipcodeInstance = zipcodeRepository.save(
+                    new Zipcode(
+                            userZipcode.zipcode,
+                            userZipcode.city,
+                            userZipcode.country,
+                            userZipcode.district,
+                            userZipcode.state));
         }
 
+        User userInstance = userRepository.save(new User(
+                roleInstance,
+                questionInstance,
+                newUser.firstName,
+                newUser.lastName,
+                newUser.email,
+                newUser.phone,
+                newUser.dni,
+                encodedPassword,
+                encodedSecurityAnswer));
 
-        User userInstance = new User(
-            userRole,
+        addressRepository.save(new Address(
+                userInstance,
+                zipcodeInstance,
+                newUser.address.address));
 
-        );
-
-        Address userAddress = new Address(
-            userInstance,
-
-        );
-
-
-        return true;
+        return userInstance;
     }
 }

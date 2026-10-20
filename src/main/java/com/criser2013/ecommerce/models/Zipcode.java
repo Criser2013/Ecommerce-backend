@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 @Table(name = "zipcode")
 public class Zipcode {
     @Id
-    @Column (length = 10)
+    @Column(length = 10)
     public String zipcode;
 
     @Column(length = 100)
@@ -23,4 +23,12 @@ public class Zipcode {
 
     @Column(length = 100)
     public String state;
+
+    public Zipcode(String zipcode, String city, String country, String district, String state) {
+        this.zipcode = zipcode;
+        this.city = city;
+        this.district = district;
+        this.country = country;
+        this.state = state;
+    }
 }
