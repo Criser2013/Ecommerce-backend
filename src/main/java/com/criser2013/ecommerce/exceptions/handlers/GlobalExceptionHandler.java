@@ -1,5 +1,5 @@
 
-package com.criser2013.ecommerce.exceptions;
+package com.criser2013.ecommerce.exceptions.handlers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.criser2013.ecommerce.dtos.responses.Response;
-import com.criser2013.ecommerce.dtos.responses.ValidationErrorResponse;
+import com.criser2013.ecommerce.dtos.responses.errors.ValidationErrorResponse;
+import com.criser2013.ecommerce.exceptions.classes.DuplicatedEmailException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,5 +60,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response> handleGeneral(Exception ex) {
         Response res = new Response(ex.toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+    }
+
+    @ExceptionHandler (DuplicatedEmailException.class)
+    public ResponseEntity<Response> handleDuplicatedEmail(DuplicatedEmailException ex) {
+        Response res = new Response(ex.error);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
     }
 }

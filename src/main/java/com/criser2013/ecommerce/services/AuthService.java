@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.criser2013.ecommerce.dtos.common.ZipcodeDto;
 import com.criser2013.ecommerce.dtos.requests.NewUserRequest;
+import com.criser2013.ecommerce.exceptions.classes.DuplicatedEmailException;
 import com.criser2013.ecommerce.models.User;
 import com.criser2013.ecommerce.models.Address;
 import com.criser2013.ecommerce.models.Role;
@@ -36,15 +37,20 @@ public class AuthService {
 
     /**
      * Method to register new users.
+     * 
      * @param newUser {NewUserRequest} New user instance.
      * @return {User} Registered user instance.
      */
     public User signUp(NewUserRequest newUser) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        boolean isEmailRegistered = userRepository.findByEmail(newUser.email) != null;
+
+        if (isEmailRegistered) {
+            throw new DuplicatedEmailException(newUser.email);
+        }
 
         String encodedPassword = encoder.encode(newUser.password);
         String encodedSecurityAnswer = encoder.encode(newUser.securityAnswer);
-
         Role roleInstance = roleRepository.findByRoleId(Long.valueOf(2));
         SecurityQuestion questionInstance = securityQuestionRepository.findBySecurityId(newUser.questionId);
         Zipcode zipcodeInstance = null;
