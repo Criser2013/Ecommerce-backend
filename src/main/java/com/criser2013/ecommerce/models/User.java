@@ -50,4 +50,22 @@ public class User {
 
     @Column(name = "security_answer", length = 200)
     public String securityAnswer;
+
+    public Long status;
+
+    public User() {}
+
+    public User(Role roleId, SecurityQuestion questionId, String firstName, String lastName, String email, String phone, String dni, String password, String securityAnswer) {
+        this.questionId = questionId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.dni = dni;
+        this.password = password;
+        this.securityAnswer = securityAnswer;
+        this.roleId = roleId;
+        this.registrationDate = LocalDateTime.now();
+        this.status = Long.valueOf(1);
+    }
 }

@@ -7,6 +7,8 @@ import com.criser2013.ecommerce.dtos.responses.SignupResponse;
 import com.criser2013.ecommerce.models.User;
 import com.criser2013.ecommerce.repositories.UserRepository;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +23,7 @@ public class AuthController {
     }
     
     @PostMapping("/api/auth/signup")
-    public SignupResponse signUp(@RequestBody NewUserRequest newUser) {
+    public SignupResponse signUp(@Valid  @RequestBody NewUserRequest newUser) {
         
         userRepository.save(
             new User()

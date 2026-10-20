@@ -40,7 +40,7 @@ public class NewUserRequest {
 
     @NotBlank
     @Size(min = 12)
-    public String password;
+    private String password;
 
     @NotBlank
     @Size(min = 3, max = 200)
