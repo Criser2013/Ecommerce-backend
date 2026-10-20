@@ -19,7 +19,7 @@ public class Address {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User userId;
+    public User user;
 
     @ManyToOne
     @JoinColumn(name = "zipcode")
@@ -30,4 +30,13 @@ public class Address {
 
     @Column(name = "is_default")
     public Boolean isDefault;
+
+    public Address() {}
+
+    public Address(User user, Zipcode zipcode, String address) {
+        this.user = user;
+        this.zipcode = zipcode;
+        this.address = address;
+        this.isDefault = false;
+    }
 }
