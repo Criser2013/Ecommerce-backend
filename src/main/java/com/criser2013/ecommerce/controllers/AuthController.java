@@ -5,31 +5,30 @@ import org.springframework.web.bind.annotation.RestController;
 import com.criser2013.ecommerce.dtos.requests.NewUserRequest;
 import com.criser2013.ecommerce.dtos.responses.SignupResponse;
 import com.criser2013.ecommerce.models.User;
-import com.criser2013.ecommerce.repositories.UserRepository;
+import com.criser2013.ecommerce.services.AuthService;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 public class AuthController {
-    private  final UserRepository userRepository;
+    private final AuthService authService;
 
-    public AuthController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
     
     @PostMapping("/api/auth/signup")
     public SignupResponse signUp(@Valid  @RequestBody NewUserRequest newUser) {
-        
-        userRepository.save(
-            new User()
-        );
-        
-        return ;
+        try {
+            User user = this.authService.signUp(newUser);
+            return new SignupResponse(user.id, user.roleId.id, user.status);
+        } catch (Error e) {
+            return new SignupResponse(e.toString());
+        }
     }
     
 
