@@ -24,6 +24,8 @@ public class Zipcode {
     @Column(length = 100)
     public String state;
 
+    public Zipcode() {}
+
     public Zipcode(String zipcode, String city, String country, String district, String state) {
         this.zipcode = zipcode;
         this.city = city;

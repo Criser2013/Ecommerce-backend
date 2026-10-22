@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 @Table(name = "security_question")
 public class SecurityQuestion {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     @Column(length = 200)

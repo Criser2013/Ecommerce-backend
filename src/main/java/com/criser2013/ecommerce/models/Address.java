@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Table
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     public Long id;
 
@@ -38,5 +38,12 @@ public class Address {
         this.zipcode = zipcode;
         this.address = address;
         this.isDefault = false;
+    }
+
+    public Address(User user, Zipcode zipcode, String address, Boolean isDefault) {
+        this.user = user;
+        this.zipcode = zipcode;
+        this.address = address;
+        this.isDefault = isDefault;
     }
 }

@@ -41,8 +41,8 @@ public class AuthService {
     /**
      * Method to register new users.
      * 
-     * @param newUser {NewUserRequest} New user instance.
-     * @return {User} Registered user instance.
+     * @param newUser New user instance.
+     * @return Registered user instance.
      */
     public User signUp(NewUserRequest newUser) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -58,7 +58,7 @@ public class AuthService {
         Optional<SecurityQuestion> questionInstance = securityQuestionRepository.findById(newUser.questionId);
 
         if (!questionInstance.isPresent()) {
-            throw new InvalidIdException(newUser.questionId);
+            throw new InvalidIdException(newUser.questionId, "questionId");
         }
 
         Zipcode zipcodeInstance = null;
@@ -78,21 +78,24 @@ public class AuthService {
                             userZipcode.state));
         }
 
-        User userInstance = userRepository.save(new User(
-                roleInstance,
-                questionInstance.get(),
-                newUser.firstName,
-                newUser.lastName,
-                newUser.email,
-                newUser.phone,
-                newUser.dni,
-                encodedPassword,
-                encodedSecurityAnswer));
+        User userInstance = userRepository.save(
+                new User(
+                        roleInstance,
+                        questionInstance.get(),
+                        newUser.firstName,
+                        newUser.lastName,
+                        newUser.email,
+                        newUser.phone,
+                        newUser.dni,
+                        encodedPassword,
+                        encodedSecurityAnswer));
 
-        addressRepository.save(new Address(
-                userInstance,
-                zipcodeInstance,
-                newUser.address.address));
+        addressRepository.save(
+                new Address(
+                        userInstance,
+                        zipcodeInstance,
+                        newUser.address.address,
+                        true));
 
         return userInstance;
     }
