@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
+    @Column(name = "id")
     public Long id;
 
     @ManyToOne
