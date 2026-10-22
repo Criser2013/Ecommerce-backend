@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.criser2013.ecommerce.dtos.responses.Response;
 import com.criser2013.ecommerce.dtos.responses.errors.ValidationErrorResponse;
 import com.criser2013.ecommerce.exceptions.classes.DuplicatedEmailException;
+import com.criser2013.ecommerce.exceptions.classes.InvalidIdException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,5 +67,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Response> handleDuplicatedEmail(DuplicatedEmailException ex) {
         Response res = new Response(ex.error);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(res);
+    }
+
+    @ExceptionHandler (InvalidIdException.class)
+    public ResponseEntity<Response> handleInvalidField(InvalidIdException ex) {
+        Response res = new Response(ex.error);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 }

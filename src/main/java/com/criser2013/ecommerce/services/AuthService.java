@@ -1,11 +1,14 @@
 package com.criser2013.ecommerce.services;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.criser2013.ecommerce.dtos.common.ZipcodeDto;
 import com.criser2013.ecommerce.dtos.requests.NewUserRequest;
 import com.criser2013.ecommerce.exceptions.classes.DuplicatedEmailException;
+import com.criser2013.ecommerce.exceptions.classes.InvalidIdException;
 import com.criser2013.ecommerce.models.User;
 import com.criser2013.ecommerce.models.Address;
 import com.criser2013.ecommerce.models.Role;
@@ -51,8 +54,13 @@ public class AuthService {
 
         String encodedPassword = encoder.encode(newUser.password);
         String encodedSecurityAnswer = encoder.encode(newUser.securityAnswer);
-        Role roleInstance = roleRepository.findByRoleId(Long.valueOf(2));
-        SecurityQuestion questionInstance = securityQuestionRepository.findBySecurityId(newUser.questionId);
+        Role roleInstance = roleRepository.findById(Long.valueOf(2)).get();
+        Optional<SecurityQuestion> questionInstance = securityQuestionRepository.findById(newUser.questionId);
+
+        if (!questionInstance.isPresent()) {
+            throw new InvalidIdException(newUser.questionId);
+        }
+
         Zipcode zipcodeInstance = null;
 
         ZipcodeDto userZipcode = newUser.address.zipcode;
@@ -72,7 +80,7 @@ public class AuthService {
 
         User userInstance = userRepository.save(new User(
                 roleInstance,
-                questionInstance,
+                questionInstance.get(),
                 newUser.firstName,
                 newUser.lastName,
                 newUser.email,

@@ -51,6 +51,7 @@ public class User {
     @Column(name = "security_answer", length = 200)
     public String securityAnswer;
 
+    @Column(name = "status")
     public Long status;
 
     public User() {}
